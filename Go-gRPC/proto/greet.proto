@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package="./proto"; // files will be created in this location
+
+package greet_service;
+
+// we have a service(can be named anything) its gonna have rpc's 
+service GreetService{
+    // 1st type of rpc call - unary API - just request and response. 
+    // NoParam and HelloResponse are messages to be defined
+    // SayHello is the request and HelloResponse is response which we get back
+    rpc SayHello(NoParam) returns (HelloResponse);
+
+    // 2nd rpc for server-side streaming. Client sends a request and server sends a stream of msgs
+    rpc SayHelloServerStreaming(NamesList) returns (stream HelloResponse);
+
+    // 3nd rpc for client-side streaming. Client sends a stream and server sends a response
+    rpc SayHelloClientStreaming(stream HelloRequest) returns (MessagesList);
+
+    // 4th rpc type is Bi-Directional Streaming. Both side streaming
+    rpc SayHelloBidirectionalStreaming(stream HelloRequest) returns (stream HelloResponse);
+
+
+}
+
+// now define the messages
+
+message NoParam{}
+
+message HelloResponse{
+    string message = 1;
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message NamesList {
+    repeated string names = 1;
+}
+message MessagesList{
+    repeated string messages = 1;
+}
